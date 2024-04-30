@@ -1,10 +1,11 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Dimensions, StyleSheet, View } from 'react-native';
 import * as Location from 'expo-location';
-import MapView from 'react-native-maps';
+import MapView, { Marker } from 'react-native-maps';
 import Constants from 'expo-constants';
 
 export default function App() {
+  const [location, setLocation] = useState({});
   const searchLocation = async () => {
     const { status } = await Location.requestForegroundPermissionsAsync();
 
@@ -13,8 +14,8 @@ export default function App() {
         'No tenemos los permisos necesarios para acceder a la location'
       );
     }
-    const location = await Location.getCurrentPositionAsync({});
-    console.log(location);
+    const currentLocation = await Location.getCurrentPositionAsync({});
+    setLocation(currentLocation);
   };
 
   useEffect(() => {
@@ -23,7 +24,15 @@ export default function App() {
 
   return (
     <View style={styles.container}>
-      <MapView style={styles.map} />
+      <MapView style={styles.map}>
+        {location.coords && (
+          <Marker
+            coordinate={location.coords}
+            title="Title"
+            description="description del point"
+          />
+        )}
+      </MapView>
     </View>
   );
 }
