@@ -1,34 +1,26 @@
-import { useState } from 'react';
-import { StyleSheet, View, Text, Button, Modal, Alert } from 'react-native';
-
-const createDialog = () =>
-  Alert.alert(
-    'Titulo',
-    'Subtitle o message',
-    [
-      {
-        text: 'Cancelar',
-        onPress: () => {},
-        style: 'cancel',
-      },
-      {
-        text: 'Aceptar',
-        onPress: () => console.log('Button pressed'),
-      },
-    ],
-    {
-      cancelable: false,
-    }
-  );
+import { useEffect } from 'react';
+import { StyleSheet, View } from 'react-native';
+import * as Location from 'expo-location';
+import Constants from 'expo-constants';
 
 export default function App() {
-  const [modal, setModal] = useState(false);
+  const searchLocation = async () => {
+    const { status } = await Location.requestForegroundPermissionsAsync();
 
-  return (
-    <View style={styles.container}>
-      <Button title="Open Dialog" onPress={createDialog}></Button>
-    </View>
-  );
+    if (status !== 'granted') {
+      return Alert.alert(
+        'No tenemos los permisos necesarios para acceder a la location'
+      );
+    }
+    const location = await Location.getCurrentPositionAsync({});
+    console.log(location);
+  };
+
+  useEffect(() => {
+    searchLocation();
+  });
+
+  return <View style={styles.container}></View>;
 }
 
 const styles = StyleSheet.create({
