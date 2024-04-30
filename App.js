@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { Dimensions, StyleSheet, View } from 'react-native';
 import * as Location from 'expo-location';
+import MapView from 'react-native-maps';
 import Constants from 'expo-constants';
 
 export default function App() {
@@ -20,10 +21,18 @@ export default function App() {
     searchLocation();
   });
 
-  return <View style={styles.container}></View>;
+  return (
+    <View style={styles.container}>
+      <MapView style={styles.map} />
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({
+  map: {
+    width: Dimensions.get('window').width,
+    height: Dimensions.get('window').height,
+  },
   container: {
     paddingTop: 30,
     flex: 1,
