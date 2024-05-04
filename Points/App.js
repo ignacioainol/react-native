@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from 'react-native';
+import { Button, StyleSheet, Text, View } from 'react-native';
 import { Map, Modal, Panel, Input } from './components';
 import { useState } from 'react';
 
@@ -17,6 +17,15 @@ export default function App() {
     setName(text);
   };
 
+  const handleSubmit = () => {
+    const newPoint = { coordinate: pointTemp, nombre: name };
+    setPoints(points.concat(newPoint));
+    setVisibility(false);
+    setName('');
+  };
+
+  console.log(points);
+
   return (
     <View style={styles.container}>
       <Map onLongPress={handleLongPress} />
@@ -27,6 +36,7 @@ export default function App() {
           placeholder="Point Name"
           onChange={handleChangeText}
         />
+        <Button title="Aceptar" onPress={handleSubmit}></Button>
       </Modal>
     </View>
   );
