@@ -1,15 +1,18 @@
 import { Button, StyleSheet, Text, View } from 'react-native';
-import { Map, Modal, Panel, Input } from './components';
-import { useState } from 'react';
+import { Map, Modal, Panel, Input, List } from './components';
+import { Fragment, useState } from 'react';
 
 export default function App() {
   const [points, setPoints] = useState([]);
   const [pointTemp, setPointTemp] = useState({});
   const [name, setName] = useState('');
+  const [visibilityFilter, setVisibilityFilter] = useState('new_punto');
   const [visibility, setVisibility] = useState(false);
 
-  const handleLongPress = ({ nativeEvent }) => {
-    setPointTemp(nativeEvent.coordinate);
+  const handleLongPress = (e) => {
+    e.persist();
+    setVisibilityFilter('new_punto');
+    setPointTemp(e.nativeEvent.coordinate);
     setVisibility(true);
   };
 
@@ -18,10 +21,15 @@ export default function App() {
   };
 
   const handleSubmit = () => {
-    const newPoint = { coordinate: pointTemp, nombre: name };
+    const newPoint = { coordinate: pointTemp, name };
     setPoints(points.concat(newPoint));
     setVisibility(false);
     setName('');
+  };
+
+  const handleList = () => {
+    setVisibilityFilter('show_list');
+    setVisibility(true);
   };
 
   console.log(points);
@@ -29,14 +37,20 @@ export default function App() {
   return (
     <View style={styles.container}>
       <Map onLongPress={handleLongPress} />
-      <Panel />
+      <Panel onPressLeft={handleList} textLeft="Lista" />
       <Modal visibility={visibility}>
-        <Input
-          title="Nombre"
-          placeholder="Point Name"
-          onChange={handleChangeText}
-        />
-        <Button title="Aceptar" onPress={handleSubmit}></Button>
+        {visibilityFilter === 'new_punto' ? (
+          <Fragment>
+            <Input
+              title="Nombre"
+              placeholder="Point Name"
+              onChangeText={handleChangeText}
+            />
+            <Button title="Aceptar" onPress={handleSubmit}></Button>
+          </Fragment>
+        ) : (
+          <List puntos={points}></List>
+        )}
       </Modal>
     </View>
   );
