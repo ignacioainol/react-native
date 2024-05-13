@@ -32,24 +32,23 @@ export default function App() {
     setVisibility(true);
   };
 
-  console.log(points);
-
   return (
     <View style={styles.container}>
-      <Map onLongPress={handleLongPress} />
+      <Map onLongPress={handleLongPress} points={points} />
       <Panel onPressLeft={handleList} textLeft="Lista" />
       <Modal visibility={visibility}>
         {visibilityFilter === 'new_punto' ? (
-          <Fragment>
+          <View style={styles.form}>
             <Input
+              style={styles.input}
               title="Nombre"
               placeholder="Point Name"
               onChangeText={handleChangeText}
             />
             <Button title="Aceptar" onPress={handleSubmit}></Button>
-          </Fragment>
+          </View>
         ) : (
-          <List puntos={points}></List>
+          <List puntos={points} closeModal={() => setVisibility(false)}></List>
         )}
       </Modal>
     </View>
@@ -57,6 +56,14 @@ export default function App() {
 }
 
 const styles = StyleSheet.create({
+  input: {
+    paddingBottom: 10,
+    marginBottom: 10,
+  },
+  form: {
+    padding: 20,
+    height: 110,
+  },
   container: {
     flex: 1,
     backgroundColor: '#fff',
