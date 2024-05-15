@@ -1,4 +1,4 @@
-import React, { useEffect, useReducer, useState } from 'react';
+import React, { useEffect, useReducer, useMemo } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
 const initialState = {
@@ -19,8 +19,26 @@ const reducer = (state, action) => {
   }
 };
 
+const users = [
+  { name: 'Ignacio', age: 32 },
+  { name: 'Nidia', age: 34 },
+];
+
 export default function App() {
   const [state, dispatch] = useReducer(reducer, initialState);
+
+  const totalAge = useMemo(() => {
+    let age = 0;
+
+    console.log('calculating ...');
+    users.forEach((x) => {
+      age = age + x.age;
+    });
+    return age;
+  }, [users]);
+
+  console.log('total age:', totalAge);
+
   return (
     <View style={styles.container}>
       <Text style={styles.text} onPress={() => dispatch({ type: 'increment' })}>
