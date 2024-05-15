@@ -1,51 +1,24 @@
-import React, { useEffect, useReducer, useMemo } from 'react';
+import React, { useCallback, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
-const initialState = {
-  count: 0,
-};
-
-const reducer = (state, action) => {
-  switch (action.type) {
-    case 'increment': {
-      return { count: state.count + 1 };
-    }
-    case 'decrement': {
-      return { count: state.count - 1 };
-    }
-    default: {
-      return state;
-    }
-  }
-};
-
-const users = [
-  { name: 'Ignacio', age: 32 },
-  { name: 'Nidia', age: 34 },
-];
-
 export default function App() {
-  const [state, dispatch] = useReducer(reducer, initialState);
+  const [count, setCount] = useState(0);
 
-  const totalAge = useMemo(() => {
-    let age = 0;
+  const increment = useCallback(() => {
+    setCount(count + 1);
+  }, [count]);
 
-    console.log('calculating ...');
-    users.forEach((x) => {
-      age = age + x.age;
-    });
-    return age;
-  }, [users]);
-
-  console.log('total age:', totalAge);
+  const decrement = useCallback(() => {
+    setCount(count - 1);
+  }, [count]);
 
   return (
     <View style={styles.container}>
-      <Text style={styles.text} onPress={() => dispatch({ type: 'increment' })}>
+      <Text style={styles.text} onPress={() => increment()}>
         +
       </Text>
-      <Text style={styles.text}>{state.count}</Text>
-      <Text style={styles.text} onPress={() => dispatch({ type: 'decrement' })}>
+      <Text style={styles.text}>{count}</Text>
+      <Text style={styles.text} onPress={() => decrement()}>
         -
       </Text>
     </View>
