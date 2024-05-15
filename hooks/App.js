@@ -1,40 +1,35 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useReducer, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
+const initialState = {
+  count: 0,
+};
+
+const reducer = (state, action) => {
+  switch (action.type) {
+    case 'increment': {
+      return { count: state.count + 1 };
+    }
+    case 'decrement': {
+      return { count: state.count - 1 };
+    }
+    default: {
+      return state;
+    }
+  }
+};
+
 export default function App() {
-  const [loading, setLoading] = useState(true);
-  const [users, setUsers] = useState([]);
-
-  useEffect(() => {
-    const getUsers = async () => {
-      try {
-        const response = await fetch(
-          'https://jsonplaceholder.typicode.com/users'
-        );
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-        const usersApi = await response.json();
-        setUsers(usersApi);
-        setLoading(false);
-      } catch (error) {
-        console.error('Error fetching users:', error);
-      }
-    };
-    getUsers();
-  }, []);
-
+  const [state, dispatch] = useReducer(reducer, initialState);
   return (
     <View style={styles.container}>
-      {loading ? (
-        <Text>Loading...</Text>
-      ) : (
-        <View style={styles.text}>
-          {users.map((x) => (
-            <Text>{x.name}</Text>
-          ))}
-        </View>
-      )}
+      <Text style={styles.text} onPress={() => dispatch({ type: 'increment' })}>
+        +
+      </Text>
+      <Text style={styles.text}>{state.count}</Text>
+      <Text style={styles.text} onPress={() => dispatch({ type: 'decrement' })}>
+        -
+      </Text>
     </View>
   );
 }
